@@ -4,9 +4,11 @@
   "description": "BackEnd: Authentication in React using Express, Node, Passport and MongoDB",
   "main": "index.js",
   "author": "Juan Carlos Jiménez Gutiérrez <jcjimenez29@misena.edu.co>",
-  "license": "MIT",
+  "license": "ISC",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
