@@ -1,0 +1,8 @@
+{
+  "name": "auth-api",
+  "version": "1.0.0",
+  "description": "BackEnd: Authentication in React using Express, Node, Passport and MongoDB",
+  "main": "index.js",
+  "author": "Juan Carlos Jiménez Gutiérrez <jcjimenez29@misena.edu.co>",
+  "license": "MIT"
+}
