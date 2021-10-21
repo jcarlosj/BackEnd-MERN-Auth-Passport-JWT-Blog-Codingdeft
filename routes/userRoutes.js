@@ -33,7 +33,7 @@ router .post( '/signup', ( request, response, next ) => {
                 else {
                     // * Agrega propiedades y sus valores al objeto
                     user .firstName = request .body .firstName;                 // ? Agrega valor del primer nombre al objeto
-                    user .firstName = request .body .lastName || '';            // ? Agrega valor del segundo nombre al objeto
+                    user .lastName = request .body .lastName || '';             // ? Agrega valor del segundo nombre al objeto
 
                     const
                         token = getToken({ _id: user ._id }),                   // ? Obtiene el Token
