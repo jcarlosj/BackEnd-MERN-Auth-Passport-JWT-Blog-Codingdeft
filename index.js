@@ -1,7 +1,10 @@
 const
     express = require( 'express' ),             // Importa Express
     cors = require( 'cors' ),                   // Permite Cross-Origin Resource Sharing
-    cookieParser = require( 'cookie-parser' );
+    cookieParser = require( 'cookie-parser' ),  // Analizador de encabezados de Cookies, Además agrega request.cookies y Habilita soporte Cookies firmadas request.secret
+    passport = require( 'passport' );           // Middleware de autenticacion para Node.
+
+const userRouter = require( './routes/userRoutes' );
 
 // ? Valida si el entorno de desarrollo no es el de producción
 if ( process .env .NODE_ENV !== 'production' ) {
@@ -10,6 +13,11 @@ if ( process .env .NODE_ENV !== 'production' ) {
 }
 
 require( './utils/connectdb' );                 // Obtiene Configuración Conexión Base de Datos
+
+// ? Importa 'strategies' de autenticacion requeridas por passport
+require( './strategies/LocalStrategy' );
+require( './strategies/JWTStrategy' );
+require( './authenticate' );       //  ?   Importa sistema de autenticacion y creacion de Tokens (Autenticacion & Actualizacion)
 
 const app = express();                          // Asigna Express al inicio de la app
 
@@ -35,7 +43,8 @@ const corsOptions = {
 }
 
 app .use( cors( corsOptions ) );    // Habilita transferencias de datos entre navegadores y servidores.
-
+app .use( passport .initialize() ); // Inicializa el Middleware Passport como Middleware para Express.
+app .use( '/users', userRouter );
 app .get( '/', ( request, response ) => {
     response .send({ status: 'success' });
 })

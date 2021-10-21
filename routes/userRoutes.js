@@ -2,7 +2,7 @@ const
     express = require( 'express' ),
     router = express .Router(),
     User = require( '../models/user' ),
-    { getToken, COOKIE_OPTIONS, getRefreshToken } = require( '../auththenticate' );
+    { getToken, COOKIE_OPTIONS, getRefreshToken } = require( '../authenticate' );
 
 // * Define las ruta de registro de usuario
 router .post( '/signup', ( request, response, next ) => {
