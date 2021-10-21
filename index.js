@@ -9,7 +9,7 @@ const userRouter = require( './routes/userRoutes' );
 // ? Valida si el entorno de desarrollo no es el de producción
 if ( process .env .NODE_ENV !== 'production' ) {
     // ? Carga variables de entorno desde el archivo .env
-  require( 'dotenv' ) .config();
+  require( 'dotenv' ) .config({ path: '.env' });
 }
 
 require( './utils/connectdb' );                 // Obtiene Configuración Conexión Base de Datos

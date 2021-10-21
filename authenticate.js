@@ -1,3 +1,5 @@
+require( 'dotenv' ) .config({ path: '.env' });
+
 const
     passport = require( 'passport' ),
     jwt = require( 'jsonwebtoken' ),
@@ -9,7 +11,7 @@ exports .COOKIE_OPTIONS = {
     httpOnly: true,
     secure: ! dev,          //  Para que el JavaScript del Cliente no pueda leerla
     signed: true,
-    maxAge: eval( process .env. REFRESH_TOKEN_EXPIRY ) * 1000,
+    maxAge: 1000,
     sameSite: 'none'                                                //  Esto por que tanto el cliente como el servidor estarán en dominios diferentes
 }
 
