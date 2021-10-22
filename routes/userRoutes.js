@@ -1,10 +1,11 @@
 const
     express = require( 'express' ),
     router = express .Router(),
+    passport = require( 'passport' ),
     User = require( '../models/user' ),
     { getToken, COOKIE_OPTIONS, getRefreshToken } = require( '../authenticate' );
 
-// * Define las ruta de registro de usuario
+// * Define la ruta de registro de usuario
 router .post( '/signup', ( request, response, next ) => {
 
     // ! Verifica que el campo nombre esté vacío
@@ -60,6 +61,36 @@ router .post( '/signup', ( request, response, next ) => {
         )
 
     }
+
+});
+
+// * Define la ruta de ingreso del usuario, usando el Middleware de autenticacion de passport
+router .post( '/login', passport .authenticate( 'local' ), ( request, response, next ) => {
+
+    const
+        token = getToken({ _id: request .user ._id }),                  // ? Obtiene el Token
+        refreshToken = getRefreshToken({ _id: request .user ._id });    // ? Obtiene Token de Actualización
+
+    // * Busca si el usuario con el ID indicado esta registrado
+    User .findById( request .user ._id )
+            .then( user => {
+                user .refreshToken .push({ refreshToken });             // ? Agrega Token de Actualización añ objeto
+
+                user .save( ( err, user ) => {
+
+                    // ! Verifica si hay un error al guardar cambios en la BD
+                    if( err ) {
+                        response .statusCode = 500;
+                        response .send( err );
+                    }
+                    else {
+                        // * Establece el Token de Actualizacion como Cookie y envia respuesta.
+                        response .cookie( 'refreshToken', refreshToken, COOKIE_OPTIONS );
+                        response .send({ success: true, token });
+                    }
+
+                });
+            }, error => next( error ) );
 
 });
 
