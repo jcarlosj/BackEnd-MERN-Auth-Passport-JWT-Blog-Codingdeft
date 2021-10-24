@@ -180,4 +180,43 @@ router.get( '/me', verifyUser, ( request, response, next ) => {
     response .send( request .user );
 });
 
+// * Define ruta para el cierre de "sesión" o salida del sistema
+router .get( '/logout', verifyUser, ( request, response, next ) => {
+    console .log( 'Hola Sumerce' );
+    const
+        { signedCookies = {} } = request,
+        { refreshToken } = signedCookies;           // ? Recuperamos el token de actualización de las cookies firmadas.
+
+    // * Consulta si existe un usuario registrado con el ID obtenido del Token de Actualizacion enviado en la Peticion
+    User .findById( request .user ._id )
+            .then( user => {
+
+                // * Busca el token de actualización contra el registro de usuario en la base de datos.
+                // ! NOTA: En caso de cierre de sesión de todos los dispositivos, se eliminarán todos los Tokens de Actualización del usuario.
+                const tokenIndex = user .refreshToken .findIndex( item => item .refreshToken === refreshToken );
+
+                // ? Verifica si hay un indice valido en la busqueda y lo elimina
+                if( tokenIndex !== -1 ) {
+                    user .refreshToken .id( user .refreshToken[ tokenIndex ] ._id ) .remove();
+                }
+
+                user .save( ( err, theUser ) => {
+
+                    // ! Verifica si hay un error al guardar cambios en la BD
+                    if( err ) {
+                        response .statusCode = 500;
+                        response .send( err );
+                    }
+                    else {
+                        // * Establece el Token de Actualizacion como Cookie y envia respuesta.
+                        response .cookie( 'refreshToken', COOKIE_OPTIONS );
+                        response .send({ success: true, user: theUser });
+                    }
+
+                });
+
+            }, error => next( error ) );
+
+});
+
 module .exports = router;
