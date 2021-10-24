@@ -4,7 +4,7 @@ const
     passport = require( 'passport' ),
     jwt = require( 'jsonwebtoken' ),
     User = require( '../models/user' ),
-    { getToken, COOKIE_OPTIONS, getRefreshToken } = require( '../authenticate' );
+    { getToken, COOKIE_OPTIONS, getRefreshToken, verifyUser } = require( '../authenticate' );
 
 // * Define la ruta de registro de usuario
 router .post( '/signup', ( request, response, next ) => {
@@ -95,6 +95,7 @@ router .post( '/login', passport .authenticate( 'local' ), ( request, response, 
 
 });
 
+// * Define la ruta para crear Token de Actualización
 router .post( '/refreshToken', ( request, response, next ) => {
 
     const
@@ -172,6 +173,11 @@ router .post( '/refreshToken', ( request, response, next ) => {
         response .send( 'Unauthorized. Request without refresh token.' );
     }
 
+});
+
+// * Define ruta para recuperar los datos del usuario (Endpoint)
+router.get( '/me', verifyUser, ( request, response, next ) => {
+    response .send( request .user );
 });
 
 module .exports = router;
